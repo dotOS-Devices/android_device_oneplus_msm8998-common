@@ -79,8 +79,6 @@ public class PocketModeService extends Service {
     };
 
     private final class SettingsObserver extends ContentObserver {
-        private boolean mIsRegistered = false;
-
         private SettingsObserver(Handler handler) {
             super(handler);
         }
@@ -112,13 +110,9 @@ public class PocketModeService extends Service {
                 IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
                 screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
                 registerReceiver(mScreenStateReceiver, screenStateFilter);
-                mIsRegistered = true;
             } else {
+                unregisterReceiver(mScreenStateReceiver);
                 mProximitySensor.disable();
-                if (mIsRegistered) {
-                    unregisterReceiver(mScreenStateReceiver);
-                    mIsRegistered = false;
-                }
             }
         }
     }
